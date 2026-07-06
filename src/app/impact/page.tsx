@@ -1,0 +1,96 @@
+import { SAMPLE_ISSUES } from "@/lib/issues";
+
+function StatCard({
+  value,
+  label,
+  accent,
+}: {
+  value: string;
+  label: string;
+  accent?: boolean;
+}) {
+  return (
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+      <div
+        className={`font-display text-3xl font-bold ${accent ? "text-mint" : "text-white"}`}
+      >
+        {value}
+      </div>
+      <div className="mt-1 text-xs text-neutral-500">{label}</div>
+    </div>
+  );
+}
+
+export default function ImpactPage() {
+  const total = SAMPLE_ISSUES.length;
+  const verified = SAMPLE_ISSUES.filter((i) =>
+    ["Verified", "Sent to county", "County responded", "Fixed", "Resolved"].includes(i.status)
+  ).length;
+  const resolved = SAMPLE_ISSUES.filter((i) =>
+    ["Fixed", "Resolved"].includes(i.status)
+  ).length;
+
+  return (
+    <div className="mx-auto max-w-4xl px-8 py-6">
+      <div className="mb-6">
+        <h1 className="font-display text-3xl font-bold tracking-tight text-white">
+          Community Impact
+        </h1>
+        <p className="mt-1 text-sm text-neutral-500">This month · Kauaʻi</p>
+      </div>
+
+      {/* Highlight card */}
+      <div className="relief-glow mb-6 rounded-2xl border border-[var(--border)] p-8 text-center">
+        <div className="section-label">Total Raised This Month</div>
+        <div className="mt-2 font-display text-5xl font-bold text-white">$18,420</div>
+        <div className="mt-2 text-sm text-neutral-500">
+          from 124 community supporters
+        </div>
+      </div>
+
+      {/* Stat grid */}
+      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <StatCard value={`${total}`} label="Reports Submitted" />
+        <StatCard value={`${verified}`} label="Cases Verified" accent />
+        <StatCard value={`${resolved}`} label="Cases Resolved" accent />
+        <StatCard value="86" label="Volunteers" />
+        <StatCard value="4,800" label="Lbs Removed" />
+        <StatCard value="6" label="Pins Funded" accent />
+      </div>
+
+      {/* Case progress */}
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
+        <div className="section-label mb-4">Case Progress</div>
+        <ProgressRow label="Submitted" value={total} max={total} />
+        <ProgressRow label="Verified" value={verified} max={total} />
+        <ProgressRow label="Resolved" value={resolved} max={total} />
+      </div>
+    </div>
+  );
+}
+
+function ProgressRow({
+  label,
+  value,
+  max,
+}: {
+  label: string;
+  value: number;
+  max: number;
+}) {
+  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+  return (
+    <div className="mb-4 last:mb-0">
+      <div className="mb-1.5 flex justify-between text-sm">
+        <span className="text-neutral-300">{label}</span>
+        <span className="text-mint">{value}</span>
+      </div>
+      <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--surface-2)]">
+        <div
+          className="h-full rounded-full bg-mint"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+    </div>
+  );
+}

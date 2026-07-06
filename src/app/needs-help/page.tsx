@@ -1,0 +1,149 @@
+"use client";
+
+import { useState } from "react";
+
+type NeedCase = {
+  title: string;
+  location: string;
+  type: "RELIEF" | "VERIFIED";
+  urgency?: "HIGH" | "MEDIUM";
+  needs: string[];
+  volunteers?: string;
+  raised?: string;
+  category: string;
+};
+
+const CASES: NeedCase[] = [
+  {
+    title: "Kahaunaele Family Flood Recovery",
+    location: "North Shore · Kauaʻi",
+    type: "RELIEF",
+    needs: ["Volunteers", "Truck / Trailer", "Fans", "Storage Bins", "Cleanup Labor"],
+    volunteers: "6 of 8 volunteers signed up",
+    category: "Community Relief",
+  },
+  {
+    title: "Taro Farm Storm Damage — Hanalei Valley",
+    location: "Hanalei Valley · Kauaʻi",
+    type: "RELIEF",
+    needs: ["Volunteers", "Equipment", "Skilled Help", "Cleanup Labor"],
+    volunteers: "2 of 10 volunteers signed up",
+    category: "Community Relief",
+  },
+  {
+    title: "Illegal Dumping Near Wailua River Access",
+    location: "Wailua Area · Kauaʻi",
+    type: "VERIFIED",
+    urgency: "HIGH",
+    needs: ["Volunteers", "Cleanup Labor"],
+    volunteers: "12 volunteers signed up — more needed",
+    raised: "$6,420 of $7,000 raised",
+    category: "Needs Volunteers",
+  },
+];
+
+const FILTERS = ["All", "Needs Volunteers", "Needs Funding", "Needs Supplies", "Urgent Safety Concern", "Community Relief"];
+
+export default function NeedsHelpPage() {
+  const [active, setActive] = useState(0);
+
+  return (
+    <div className="mx-auto max-w-4xl px-8 py-6">
+      <div className="mb-5">
+        <h1 className="font-display text-3xl font-bold tracking-tight text-white">
+          Needs Help Now
+        </h1>
+        <p className="mt-1 text-sm text-neutral-500">
+          {CASES.length} active needs · Kauaʻi
+        </p>
+      </div>
+
+      <div className="mb-6 flex flex-wrap gap-2">
+        {FILTERS.map((f, i) => (
+          <button
+            key={f}
+            onClick={() => setActive(i)}
+            style={active === i ? { backgroundColor: "#7fffd4", color: "#000" } : {}}
+            className={
+              active === i
+                ? "rounded-full px-4 py-1.5 text-xs font-semibold"
+                : "rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white"
+            }
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+
+      <div className="section-label mb-3">Community Relief</div>
+      <div className="flex flex-col gap-4">
+        {CASES.map((c) => (
+          <div
+            key={c.title}
+            className="relief-glow rounded-2xl border border-[var(--border)] p-5"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--surface-2)] text-mint">
+                  ♥
+                </div>
+                <div>
+                  <h3 className="font-display text-base font-semibold text-white">
+                    {c.title}
+                  </h3>
+                  <p className="text-xs text-neutral-500">{c.location}</p>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1.5">
+                <span className="rounded-md bg-[var(--surface-2)] px-2 py-0.5 text-[10px] font-semibold text-mint">
+                  {c.type}
+                </span>
+                {c.urgency && (
+                  <span className="rounded-md bg-red-500/15 px-2 py-0.5 text-[10px] font-semibold text-red-300">
+                    {c.urgency}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Needs box */}
+            <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]/50 p-3">
+              <div className="section-label mb-2 text-mint">Needs:</div>
+              <div className="flex flex-wrap gap-2">
+                {c.needs.map((n) => (
+                  <span
+                    key={n}
+                    className="rounded-md bg-[var(--surface-2)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-neutral-300"
+                  >
+                    {n}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {c.volunteers && (
+              <p className="mt-3 text-xs text-neutral-500">👥 {c.volunteers}</p>
+            )}
+            {c.raised && (
+              <>
+                <p className="mt-1 text-xs text-neutral-500">💵 {c.raised}</p>
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--surface-2)]">
+                  <div className="h-full rounded-full bg-mint" style={{ width: "91%" }} />
+                </div>
+              </>
+            )}
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <button className="rounded-lg bg-mint py-2.5 text-sm font-semibold text-black hover:opacity-90">
+                Volunteer
+              </button>
+              <button className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] py-2.5 text-sm font-medium text-neutral-300 hover:text-white">
+                Offer Supplies
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

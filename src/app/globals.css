@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
+@theme {
+  --color-mint: #7fffd4;
+  --color-mint-dim: #5eead4;
+  --color-surface: #0b0f14;
+  --color-surface-2: #10161d;
+  --color-edge: #1b2530;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #05070a;
+  --foreground: #e8f0ee;
+  --mint: #7fffd4;
+  --surface: #0b0f14;
+  --surface-2: #10161d;
+  --border: #1b2530;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7a86;
+}
+
+.text-mint {
+  color: #7fffd4;
+}
+.bg-mint {
+  background-color: #7fffd4;
+}
+.border-mint {
+  border-color: #7fffd4;
+}
+
+.relief-glow {
+  background: linear-gradient(
+    135deg,
+    rgba(127, 255, 212, 0.06),
+    rgba(127, 255, 212, 0.01)
+  );
 }

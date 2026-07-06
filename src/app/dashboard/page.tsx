@@ -35,10 +35,9 @@ export default function DashboardPage() {
           <button
             key={f.label}
             onClick={() => setActiveFilter(index)}
-            style={activeFilter === index ? { backgroundColor: "#7fffd4", color: "#000" } : {}}
             className={
               activeFilter === index
-                ? "rounded-full px-4 py-1.5 text-xs font-semibold"
+                ? "rounded-full bg-mint px-4 py-1.5 text-xs font-semibold text-black"
                 : "rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white"
             }
           >
