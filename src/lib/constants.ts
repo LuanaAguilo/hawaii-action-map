@@ -13,5 +13,6 @@ export const NAV_LINKS = [
   { href: "/feed", label: "Live Feed", icon: "feed" },
   { href: "/needs-help", label: "Needs Help", icon: "help" },
   { href: "/impact", label: "Impact", icon: "impact" },
-  { href: "/dashboard", label: "Community Dashboard", icon: "profile" },
+  { href: "/dashboard", label: "Community Dashboard", icon: "feed" },
+  { href: "/profile", label: "Profile", icon: "profile" },
 ];
