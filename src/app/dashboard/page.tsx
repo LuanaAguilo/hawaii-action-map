@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import IssueCard from "@/components/IssueCard";
+import SocialIssueCard from "@/components/SocialIssueCard";
 import { SAMPLE_ISSUES } from "@/lib/issues";
 import { Issue } from "@/lib/types";
 
@@ -35,9 +35,10 @@ export default function DashboardPage() {
           <button
             key={f.label}
             onClick={() => setActiveFilter(index)}
+            style={activeFilter === index ? { backgroundColor: "#7fffd4", color: "#000" } : {}}
             className={
               activeFilter === index
-                ? "rounded-full bg-mint px-4 py-1.5 text-xs font-semibold text-black"
+                ? "rounded-full px-4 py-1.5 text-xs font-semibold"
                 : "rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white"
             }
           >
@@ -49,7 +50,7 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4">
         {visibleIssues.length > 0 ? (
           visibleIssues.map((issue) => (
-            <IssueCard key={issue.id} issue={issue} />
+            <SocialIssueCard key={issue.id} issue={issue} />
           ))
         ) : (
           <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center text-sm text-neutral-500">
