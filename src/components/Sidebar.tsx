@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { APP_NAME, ISLANDS, NAV_LINKS } from "@/lib/constants";
+import { NAV_LINKS } from "@/lib/constants";
 
 function NavIcon({ name }: { name: string }) {
   const common = "h-5 w-5";
@@ -48,14 +48,14 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="border-b border-[var(--border)] px-5 py-5">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--surface-2)] text-mint">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--surface-2)] text-forest">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75 3.75 4.5v12.75L9 19.5m0-12.75L15 4.5m-6 2.25v12.75m6-15L20.25 6.75V19.5L15 17.25m0-12.75v12.75" />
             </svg>
           </div>
           <div className="leading-tight">
-            <div className="font-display text-sm font-bold text-white">Hawaiʻi</div>
-            <div className="font-display text-sm font-bold text-mint">Action Map</div>
+            <div className="font-display text-sm font-bold text-[var(--foreground)]">Hawaiʻi</div>
+            <div className="font-display text-sm font-bold text-forest">Action Map</div>
           </div>
         </Link>
       </div>
@@ -63,14 +63,14 @@ export default function Sidebar() {
       {/* Island selector */}
       <div className="px-4 pt-4">
         <div className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5">
-          <span className="flex items-center gap-2 text-sm font-semibold text-mint">
+          <span className="flex items-center gap-2 text-sm font-semibold text-forest">
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
             </svg>
             Kauaʻi
           </span>
-          <svg className="h-4 w-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-4 w-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
           </svg>
         </div>
@@ -86,8 +86,8 @@ export default function Sidebar() {
               href={link.href}
               className={
                 isActive
-                  ? "flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm font-semibold text-mint"
-                  : "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-400 hover:bg-[var(--surface-2)] hover:text-white"
+                  ? "flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm font-semibold text-forest"
+                  : "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-500 hover:bg-[var(--surface-2)] hover:text-forest"
               }
             >
               <NavIcon name={link.icon} />
@@ -101,15 +101,15 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2 border-t border-[var(--border)] p-4">
         <Link
           href="/report"
-          className="flex items-center justify-center gap-2 rounded-lg bg-mint px-4 py-2.5 text-sm font-semibold text-black hover:opacity-90"
+          className="flex items-center justify-center gap-2 rounded-lg bg-forest px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90"
         >
           + Report Issue
         </Link>
         <Link
           href="/needs-help"
-          className="flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2.5 text-sm font-medium text-neutral-300 hover:text-white"
+          className="flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2.5 text-sm font-medium text-neutral-600 hover:text-forest"
         >
-          ♥ Community Relief
+          Community Relief
         </Link>
       </div>
     </aside>

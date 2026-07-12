@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Icon from "@/components/Icon";
+import CountUp from "@/components/CountUp";
+import JourneyTrack from "@/components/JourneyTrack";
 import { AVATARS, ACHIEVEMENTS, PROFILE_STATS } from "@/lib/profile";
-import { LEVELS, getLevel, isAlii } from "@/lib/levels";
+import { getLevel, isAlii } from "@/lib/levels";
+
+const NAME = "Malia Kahananui";
+const INITIALS = "MK";
 
 export default function ProfilePage() {
   const [avatarIndex, setAvatarIndex] = useState(0);
@@ -36,79 +42,79 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-8 py-6">
-      <h1 className="mb-6 font-display text-3xl font-bold tracking-tight text-white">
+      <h1 className="mb-6 animate-rise font-display text-3xl font-bold tracking-tight text-[var(--foreground)]">
         Profile
       </h1>
 
-      {/* Header card */}
-      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
+      {/* Header card — gradient hero */}
+      <div className="hero-gradient animate-rise overflow-hidden rounded-2xl border border-[var(--border)] p-6 shadow-[0_10px_40px_-20px_rgba(42,38,32,0.25)]">
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowPicker((s) => !s)}
-            className="flex h-20 w-20 items-center justify-center rounded-full text-4xl transition hover:opacity-80"
-            style={{ backgroundColor: avatar.color + "33", border: `2px solid ${avatar.color}` }}
+            className="flex h-20 w-20 items-center justify-center rounded-full font-display text-2xl font-bold text-white shadow-lg ring-4 ring-white/60 transition hover:opacity-90"
+            style={{ backgroundColor: avatar.color }}
             title="Change avatar"
           >
-            {avatar.emoji}
+            {INITIALS}
           </button>
 
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h2 className="font-display text-2xl font-bold text-white">Malia Kahananui</h2>
+              <h2 className="font-display text-2xl font-bold text-[var(--foreground)]">{NAME}</h2>
               {alii && (
-                <span
-                  className="flex h-5 w-5 items-center justify-center rounded-full bg-mint text-[11px] font-bold text-black"
-                  title="Verified Aliʻi"
-                >
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-mustard text-[11px] font-bold text-white" title="Verified Aliʻi">
                   ✓
                 </span>
               )}
             </div>
             <p className="text-sm text-neutral-500">Kauaʻi · Since March 2025</p>
-            <span className="mt-1 inline-block rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint">
-              {current.emoji} {current.name} · Level {current.rank}
+            <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-forest px-3 py-1 text-xs font-semibold text-white">
+              <Icon name={current.icon} className="h-3.5 w-3.5" />
+              {current.name} · Level {current.rank}
             </span>
           </div>
 
           <button onClick={handleToggle} className="flex flex-col items-center gap-1">
             <div
               className={`flex h-7 w-14 items-center rounded-full p-1 transition ${
-                isPublic ? "justify-end bg-mint" : "justify-start bg-neutral-700"
+                isPublic ? "justify-end bg-forest" : "justify-start bg-neutral-300"
               }`}
             >
-              <div className="h-5 w-5 rounded-full bg-white" />
+              <div className="h-5 w-5 rounded-full bg-white shadow" />
             </div>
-            <span className="text-xs text-neutral-400">
+            <span className="text-xs text-neutral-500">
               {isPublic ? "Public" : "Private"} profile
             </span>
           </button>
         </div>
 
+        {/* Progress to next level */}
         <div className="mt-5">
           <div className="mb-1.5 flex justify-between text-xs">
-            <span className="text-neutral-400">
-              {current.emoji} {current.name}
+            <span className="flex items-center gap-1 font-medium text-forest">
+              <Icon name={current.icon} className="h-3.5 w-3.5" />
+              {current.name}
             </span>
             {next ? (
               <span className="text-neutral-500">
-                {next.minPoints - points} pts to {next.emoji} {next.name}
+                <span className="font-semibold text-clay">{next.minPoints - points} pts</span> to {next.name}
               </span>
             ) : (
-              <span className="text-mint">Max level reached 👑</span>
+              <span className="font-semibold text-mustard">Max level reached</span>
             )}
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--surface-2)]">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/70">
             <div
-              className="h-full rounded-full bg-mint transition-all"
-              style={{ width: `${progressPct}%` }}
+              className="h-full rounded-full transition-all duration-1000 ease-out"
+              style={{ width: `${progressPct}%`, background: "linear-gradient(90deg, var(--forest), var(--clay))" }}
             />
           </div>
-          <p className="mt-1 text-right text-[11px] text-neutral-600">{points} points</p>
+          <p className="mt-1 text-right text-[11px] text-neutral-400">{points} points</p>
         </div>
 
         {showPicker && (
-          <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3">
-            <p className="section-label mb-2">Choose your avatar</p>
+          <div className="mt-4 rounded-xl border border-[var(--border)] bg-white/60 p-3">
+            <p className="section-label mb-2">Choose your color</p>
             <div className="flex flex-wrap gap-2">
               {AVATARS.map((a, i) => (
                 <button
@@ -117,42 +123,44 @@ export default function ProfilePage() {
                     setAvatarIndex(i);
                     setShowPicker(false);
                   }}
-                  className="flex h-12 w-12 items-center justify-center rounded-full text-2xl transition hover:scale-110"
-                  style={{ backgroundColor: a.color + "33", border: `2px solid ${a.color}` }}
+                  className="flex h-12 w-12 items-center justify-center rounded-full font-display text-sm font-bold text-white shadow transition hover:scale-110"
+                  style={{ backgroundColor: a.color }}
                   title={a.label}
                 >
-                  {a.emoji}
+                  {INITIALS}
                 </button>
               ))}
             </div>
-            <p className="mt-2 text-xs text-neutral-600">Upload your own photo coming soon</p>
+            <p className="mt-2 text-xs text-neutral-400">Upload your own photo coming soon</p>
           </div>
         )}
       </div>
 
-      {/* Stats */}
+      {/* Stats — counting up */}
       <div className="mt-4 grid grid-cols-4 gap-3">
-        <StatBox value={PROFILE_STATS.reports} label="Reports" />
-        <StatBox value={PROFILE_STATS.following} label="Following" />
-        <StatBox value={PROFILE_STATS.volunteered} label="Vol. Hours" />
-        <StatBox value={PROFILE_STATS.donated} label="Supported" />
+        <StatBox value={PROFILE_STATS.reports} label="Reports" delay="0.05s" />
+        <StatBox value={PROFILE_STATS.following} label="Following" delay="0.1s" />
+        <StatBox value={PROFILE_STATS.volunteered} label="Vol. Hours" delay="0.15s" />
+        <StatBox value={PROFILE_STATS.donated} label="Supported" delay="0.2s" />
       </div>
 
-      {/* Featured achievement strip */}
+      {/* Featured achievement */}
       <div className="mt-4">
         <button
           onClick={() => setShowAllAchievements((s) => !s)}
-          className="flex w-full items-center gap-4 rounded-2xl border border-mint/30 bg-mint/5 p-4 text-left transition hover:border-mint/50"
+          className="card-lift flex w-full items-center gap-4 rounded-2xl border border-mustard/30 bg-mustard/5 p-4 text-left"
         >
-          <div className="text-3xl">{featured.icon}</div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-mustard/15 text-mustard">
+            <Icon name={featured.icon} />
+          </div>
           <div className="flex-1">
-            <div className="font-display text-base font-semibold text-white">
+            <div className="font-display text-base font-semibold text-[var(--foreground)]">
               {featured.description}
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm font-semibold text-mint">+{otherEarnedCount}</div>
-            <div className="text-[10px] text-neutral-500">
+            <div className="text-sm font-semibold text-mustard">+{otherEarnedCount}</div>
+            <div className="text-[10px] text-neutral-400">
               {showAllAchievements ? "hide" : "more"}
             </div>
           </div>
@@ -160,19 +168,26 @@ export default function ProfilePage() {
 
         {showAllAchievements && (
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {ACHIEVEMENTS.map((a) => (
+            {ACHIEVEMENTS.map((a, i) => (
               <div
                 key={a.id}
-                className={`rounded-xl border p-4 text-center ${
+                className={`card-lift animate-rise rounded-xl border p-4 text-center ${
                   a.earned
-                    ? "border-mint/30 bg-mint/5"
+                    ? "border-mustard/25 bg-mustard/5"
                     : "border-[var(--border)] bg-[var(--surface)] opacity-50"
                 }`}
+                style={{ animationDelay: `${i * 0.05}s` }}
               >
-                <div className="text-3xl">{a.icon}</div>
-                <div className="mt-2 text-sm font-medium text-white">{a.description}</div>
+                <div
+                  className={`mx-auto flex h-11 w-11 items-center justify-center rounded-full ${
+                    a.earned ? "bg-mustard/15 text-mustard" : "bg-[var(--surface-2)] text-neutral-400"
+                  }`}
+                >
+                  <Icon name={a.icon} className="h-6 w-6" />
+                </div>
+                <div className="mt-2 text-sm font-medium text-[var(--foreground)]">{a.description}</div>
                 {a.earned && (
-                  <div className="mt-1 text-[10px] font-semibold text-mint">EARNED</div>
+                  <div className="mt-1 text-[10px] font-semibold tracking-wide text-mustard">EARNED</div>
                 )}
               </div>
             ))}
@@ -180,56 +195,23 @@ export default function ProfilePage() {
         )}
       </div>
 
-      {/* Journey spectrum */}
-      <div className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
+      {/* Journey spectrum — scrollable */}
+      <div className="animate-rise mt-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
         <p className="section-label mb-4">Your Journey</p>
-        <div className="flex items-start justify-between gap-1 overflow-x-auto pb-2">
-          {LEVELS.map((level, i) => {
-            const reached = points >= level.minPoints;
-            const isCurrent = level.rank === current.rank;
-            return (
-              <div key={level.rank} className="flex flex-1 flex-col items-center">
-                <div className="flex w-full items-center">
-                  <div
-                    className={`h-0.5 flex-1 ${i === 0 ? "opacity-0" : reached ? "bg-mint" : "bg-[var(--surface-2)]"}`}
-                  />
-                  <div
-                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base transition ${
-                      isCurrent
-                        ? "bg-mint text-black ring-4 ring-mint/30"
-                        : reached
-                        ? "bg-mint/20 text-white"
-                        : "bg-[var(--surface-2)] text-neutral-600 opacity-60"
-                    }`}
-                  >
-                    {level.emoji}
-                  </div>
-                  <div
-                    className={`h-0.5 flex-1 ${i === LEVELS.length - 1 ? "opacity-0" : points >= LEVELS[i + 1].minPoints ? "bg-mint" : "bg-[var(--surface-2)]"}`}
-                  />
-                </div>
-                <span
-                  className={`mt-1.5 text-center text-[9px] leading-tight ${
-                    isCurrent ? "font-semibold text-mint" : reached ? "text-neutral-400" : "text-neutral-600"
-                  }`}
-                >
-                  {level.name}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        <JourneyTrack points={points} currentRank={current.rank} />
       </div>
 
       {/* Confirmation popup */}
       {showConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
-            <div className="mb-3 text-3xl">🌐</div>
-            <h3 className="font-display text-lg font-bold text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="animate-rise w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-forest/10 text-forest">
+              <Icon name="shield" />
+            </div>
+            <h3 className="font-display text-lg font-bold text-[var(--foreground)]">
               Switch to a public profile?
             </h3>
-            <p className="mt-2 text-sm text-neutral-400">
+            <p className="mt-2 text-sm text-neutral-500">
               Your name, avatar, achievements, and community activity will be
               visible to other Hawaiʻi Action Map members. Your private details
               stay protected. You can switch back to private anytime.
@@ -237,7 +219,7 @@ export default function ProfilePage() {
             <div className="mt-5 flex gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] py-2.5 text-sm font-medium text-neutral-300 hover:text-white"
+                className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] py-2.5 text-sm font-medium text-neutral-600 hover:text-forest"
               >
                 Cancel
               </button>
@@ -246,7 +228,7 @@ export default function ProfilePage() {
                   setIsPublic(true);
                   setShowConfirm(false);
                 }}
-                className="flex-1 rounded-lg bg-mint py-2.5 text-sm font-semibold text-black hover:opacity-90"
+                className="flex-1 rounded-lg bg-forest py-2.5 text-sm font-semibold text-white hover:opacity-90"
               >
                 Make Public
               </button>
@@ -258,10 +240,15 @@ export default function ProfilePage() {
   );
 }
 
-function StatBox({ value, label }: { value: number; label: string }) {
+function StatBox({ value, label, delay }: { value: number; label: string; delay: string }) {
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 text-center">
-      <div className="font-display text-2xl font-bold text-mint">{value}</div>
+    <div
+      className="card-lift animate-rise rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 text-center"
+      style={{ animationDelay: delay }}
+    >
+      <div className="font-display text-2xl font-bold text-forest">
+        <CountUp value={value} />
+      </div>
       <div className="mt-0.5 text-xs text-neutral-500">{label}</div>
     </div>
   );

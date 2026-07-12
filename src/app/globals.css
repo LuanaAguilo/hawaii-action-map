@@ -1,20 +1,17 @@
 @import "tailwindcss";
 
-@theme {
-  --color-mint: #7fffd4;
-  --color-mint-dim: #5eead4;
-  --color-surface: #0b0f14;
-  --color-surface-2: #10161d;
-  --color-edge: #1b2530;
-}
-
 :root {
-  --background: #05070a;
-  --foreground: #e8f0ee;
-  --mint: #7fffd4;
-  --surface: #0b0f14;
-  --surface-2: #10161d;
-  --border: #1b2530;
+  --background: #f5f1e8;
+  --surface: #fbf9f3;
+  --surface-2: #efe9db;
+  --border: #e0d8c6;
+
+  --foreground: #2a2620;
+  --forest: #2d4a3e;
+  --forest-soft: #3f6152;
+  --clay: #8b6f52;
+  --mustard: #c9a227;
+  --rose: #c17b8a;
 }
 
 body {
@@ -31,23 +28,57 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6b7a86;
+  color: #9a8f7a;
 }
 
-.text-mint {
-  color: #7fffd4;
-}
-.bg-mint {
-  background-color: #7fffd4;
-}
-.border-mint {
-  border-color: #7fffd4;
+.text-forest { color: var(--forest); }
+.bg-forest { background-color: var(--forest); }
+.border-forest { border-color: var(--forest); }
+.text-clay { color: var(--clay); }
+.text-mustard { color: var(--mustard); }
+.bg-mustard { background-color: var(--mustard); }
+.text-rose { color: var(--rose); }
+
+.hero-gradient {
+  background: linear-gradient(135deg, #fbf9f3 0%, #eef2ea 55%, #e8efe6 100%);
 }
 
 .relief-glow {
   background: linear-gradient(
     135deg,
-    rgba(127, 255, 212, 0.06),
-    rgba(127, 255, 212, 0.01)
+    rgba(45, 74, 62, 0.05),
+    rgba(139, 111, 82, 0.02)
   );
+}
+
+/* Fade + rise in */
+@keyframes fadeRise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-rise {
+  animation: fadeRise 0.5s ease-out both;
+}
+
+/* Soft pulse for the current level */
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45, 74, 62, 0.25); }
+  50% { box-shadow: 0 0 0 8px rgba(45, 74, 62, 0); }
+}
+.animate-soft-pulse {
+  animation: softPulse 2.2s ease-in-out infinite;
+}
+
+/* Hover lift for cards */
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px -12px rgba(42, 38, 32, 0.18);
+}
+
+/* Hide scrollbar but keep scrolling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
