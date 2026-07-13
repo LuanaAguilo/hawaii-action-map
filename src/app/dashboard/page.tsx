@@ -1,29 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import SocialIssueCard from "@/components/SocialIssueCard";
-import { SAMPLE_ISSUES } from "@/lib/issues";
-import { Issue } from "@/lib/types";
+import FeedPostCard from "@/components/FeedPostCard";
+import { FEED_POSTS, PostType } from "@/lib/posts";
 
-const FILTERS: { label: string; filter: (issues: Issue[]) => Issue[] }[] = [
-  { label: "🔥 Hot", filter: (issues) => [...issues].sort((a, b) => b.confirmations - a.confirmations) },
-  { label: "Newest", filter: (issues) => [...issues].sort((a, b) => a.daysOpen - b.daysOpen) },
-  { label: "Needs County Response", filter: (issues) => issues.filter((i) => i.status === "Verified" || i.status === "Sent to county") },
-  { label: "Ignored / No Response", filter: (issues) => issues.filter((i) => i.status === "No response / ignored") },
-  { label: "Needs Volunteers", filter: (issues) => issues.filter((i) => i.status === "Needs volunteers") },
-  { label: "Resolved", filter: (issues) => issues.filter((i) => i.status === "Fixed" || i.status === "Resolved") },
+const FILTERS: { label: string; match: PostType | "all" | "hot" }[] = [
+  { label: "🔥 Hot", match: "hot" },
+  { label: "All", match: "all" },
+  { label: "Safety", match: "safety" },
+  { label: "Traffic", match: "accident" },
+  { label: "Heads Up", match: "suspicious" },
+  { label: "Lost & Found", match: "lostfound" },
+  { label: "Notices", match: "notice" },
+  { label: "Civic", match: "civic" },
 ];
 
 export default function DashboardPage() {
-  const [activeFilter, setActiveFilter] = useState(0);
+  const [active, setActive] = useState(0);
   const [postText, setPostText] = useState("");
-  const visibleIssues = FILTERS[activeFilter].filter(SAMPLE_ISSUES);
+
+  const filter = FILTERS[active].match;
+  const posts =
+    filter === "all"
+      ? FEED_POSTS
+      : filter === "hot"
+      ? [...FEED_POSTS].sort((a, b) => b.reactions - a.reactions)
+      : FEED_POSTS.filter((p) => p.type === filter);
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-6">
+    <div className="mx-auto max-w-2xl px-4 py-5">
+      {/* Header + live bar */}
       <div className="mb-4 animate-rise">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl font-bold tracking-tight text-[var(--foreground)]">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--foreground)]">
             Community
           </h1>
           <span className="flex items-center gap-1.5 rounded-full bg-rose/10 px-3 py-1 text-xs font-semibold text-rose">
@@ -35,11 +44,12 @@ export default function DashboardPage() {
           </span>
         </div>
         <p className="mt-1 text-sm text-neutral-500">
-          <span className="font-semibold text-forest">142 neighbors</span> active now · 3 new reports today
+          <span className="font-semibold text-forest">142 neighbors</span> active now · 6 new posts today
         </p>
       </div>
 
-      <div className="animate-rise mb-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4" style={{ animationDelay: "0.05s" }}>
+      {/* Post box */}
+      <div className="animate-rise mb-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4" style={{ animationDelay: "0.05s" }}>
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest font-display text-sm font-bold text-white">
             MK
@@ -48,12 +58,11 @@ export default function DashboardPage() {
             <textarea
               value={postText}
               onChange={(e) => setPostText(e.target.value)}
-              placeholder="What's happening on Kauaʻi? Report it, share it, rally your neighbors..."
+              placeholder="What's happening on Kauaʻi right now?"
               rows={2}
               className="w-full resize-none rounded-lg bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--foreground)] placeholder-neutral-400 focus:outline-none"
             />
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-xs text-neutral-400">Add a photo & location on the next step</span>
+            <div className="mt-2 flex items-center justify-end">
               <a href="/report" className="rounded-lg bg-forest px-4 py-1.5 text-sm font-semibold text-white hover:opacity-90">
                 Post
               </a>
@@ -62,16 +71,17 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mb-5 flex flex-wrap gap-2 animate-rise" style={{ animationDelay: "0.1s" }}>
-        {FILTERS.map((f, index) => (
+      {/* Type filters */}
+      <div className="mb-4 flex gap-2 overflow-x-auto pb-1 animate-rise" style={{ animationDelay: "0.1s", scrollbarWidth: "none" }}>
+        {FILTERS.map((f, i) => (
           <button
             key={f.label}
-            onClick={() => setActiveFilter(index)}
-            style={activeFilter === index ? { backgroundColor: "#2d4a3e", color: "#fff" } : {}}
+            onClick={() => setActive(i)}
+            style={active === i ? { backgroundColor: "#2d4a3e", color: "#fff" } : {}}
             className={
-              activeFilter === index
-                ? "rounded-full px-4 py-1.5 text-xs font-semibold"
-                : "rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1.5 text-xs font-medium text-neutral-500 hover:text-forest"
+              active === i
+                ? "shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold"
+                : "shrink-0 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1.5 text-xs font-medium text-neutral-500 hover:text-forest"
             }
           >
             {f.label}
@@ -79,16 +89,17 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* Feed */}
       <div className="flex flex-col gap-4">
-        {visibleIssues.length > 0 ? (
-          visibleIssues.map((issue, i) => (
-            <div key={issue.id} className="animate-rise" style={{ animationDelay: `${0.15 + i * 0.07}s` }}>
-              <SocialIssueCard issue={issue} />
+        {posts.length > 0 ? (
+          posts.map((post, i) => (
+            <div key={post.id} className="animate-rise" style={{ animationDelay: `${0.15 + i * 0.07}s` }}>
+              <FeedPostCard post={post} />
             </div>
           ))
         ) : (
           <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center text-sm text-neutral-500">
-            No issues in this category yet.
+            Nothing here yet.
           </p>
         )}
       </div>

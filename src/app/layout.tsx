@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
-import Sidebar from "@/components/Sidebar";
+import BottomNav from "@/components/BottomNav";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -22,9 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={spaceGrotesk.variable}>
-      <body className="bg-[var(--background)] text-[var(--foreground)]">
-        <Sidebar />
-        <main className="ml-64 min-h-screen">{children}</main>
+      <body className="bg-[var(--background)]">
+        <main className="mx-auto min-h-screen w-full max-w-5xl pb-24">
+          {children}
+        </main>
+        <BottomNav />
       </body>
     </html>
   );
