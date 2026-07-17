@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 export default function MapPage() {
   return (
@@ -16,8 +15,8 @@ export default function MapPage() {
         </svg>
       </div>
 
-      {/* Map — full width, whole island visible, vertically centered */}
-      <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center">
+      {/* Map fills the width, vertically centered in available space */}
+      <div className="flex min-h-[calc(100vh-7rem)] items-center">
         <Image
           src="/kauai-map.png"
           alt="Live action map of Kauaʻi"
@@ -27,15 +26,6 @@ export default function MapPage() {
           className="h-auto w-full animate-rise object-contain"
         />
       </div>
-
-      {/* Floating report button over the map */}
-      <Link
-        href="/report"
-        style={{ backgroundColor: "#2d4a3e", color: "#fff" }}
-        className="fixed bottom-24 left-1/2 z-20 -translate-x-1/2 rounded-full px-6 py-3 text-sm font-semibold shadow-xl transition hover:opacity-90"
-      >
-        + Report an Issue
-      </Link>
     </div>
   );
 }
