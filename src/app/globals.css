@@ -1,12 +1,20 @@
 @import "tailwindcss";
 
 :root {
+  /* Warm cream / off-white */
   --background: #f5f1e8;
   --surface: #fbf9f3;
   --surface-2: #efe9db;
   --border: #e0d8c6;
 
+  /* Natural, earthy */
   --foreground: #2a2620;
+  --muted: #7d7361;
+  --muted-2: #9a8f7a;
+
+  --accent: #2d4a3e;
+
+  /* natural palette */
   --forest: #2d4a3e;
   --forest-soft: #3f6152;
   --clay: #8b6f52;
@@ -17,18 +25,22 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-display), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.011em;
 }
 
 .font-display {
   font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 .section-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #9a8f7a;
+  color: var(--muted-2);
 }
 
 .text-forest { color: var(--forest); }
@@ -39,46 +51,57 @@ body {
 .bg-mustard { background-color: var(--mustard); }
 .text-rose { color: var(--rose); }
 
+/* Membership card — warm, premium version */
+.membership-card {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(130% 130% at 0% 0%, #3f6152 0%, #2d4a3e 50%, #24382f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px -28px rgba(42, 38, 32, 0.55);
+}
+
+@keyframes sheen {
+  0% { transform: translateX(-160%) skewX(-15deg); }
+  55%, 100% { transform: translateX(320%) skewX(-15deg); }
+}
+.card-sheen::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-160%) skewX(-15deg);
+  animation: sheen 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
 .hero-gradient {
   background: linear-gradient(135deg, #fbf9f3 0%, #eef2ea 55%, #e8efe6 100%);
 }
 
 .relief-glow {
-  background: linear-gradient(
-    135deg,
-    rgba(45, 74, 62, 0.05),
-    rgba(139, 111, 82, 0.02)
-  );
+  background: linear-gradient(135deg, rgba(45, 74, 62, 0.05), rgba(139, 111, 82, 0.02));
 }
 
-/* Fade + rise in */
 @keyframes fadeRise {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.animate-rise {
-  animation: fadeRise 0.5s ease-out both;
-}
+.animate-rise { animation: fadeRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-/* Soft pulse for the current level */
 @keyframes softPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(45, 74, 62, 0.25); }
-  50% { box-shadow: 0 0 0 8px rgba(45, 74, 62, 0); }
+  50% { box-shadow: 0 0 0 7px rgba(45, 74, 62, 0); }
 }
-.animate-soft-pulse {
-  animation: softPulse 2.2s ease-in-out infinite;
-}
+.animate-soft-pulse { animation: softPulse 2.2s ease-in-out infinite; }
 
-/* Hover lift for cards */
 .card-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 .card-lift:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px -12px rgba(42, 38, 32, 0.18);
+  box-shadow: 0 16px 40px -18px rgba(42, 38, 32, 0.3);
+  border-color: rgba(45, 74, 62, 0.25);
 }
 
-/* Hide scrollbar but keep scrolling */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
+.scrollbar-hide::-webkit-scrollbar { display: none; }

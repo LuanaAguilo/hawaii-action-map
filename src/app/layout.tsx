@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Manrope } from "next/font/google";
 import BottomNav from "@/components/BottomNav";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-display",
 });
 
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={spaceGrotesk.variable}>
+    <html lang="en" className={manrope.variable}>
       <body className="bg-[var(--background)]" suppressHydrationWarning>
         <main className="mx-auto min-h-screen w-full max-w-5xl pb-24">
           {children}
