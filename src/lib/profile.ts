@@ -1,5 +1,3 @@
-// Avatars are now monogram-style: an initial on a colored circle.
-// Each avatar is just a color + a short label. No emojis.
 export const AVATARS = [
   { id: "forest", color: "#2d4a3e", label: "Forest" },
   { id: "clay", color: "#8b6f52", label: "Clay" },
@@ -13,7 +11,6 @@ export const AVATARS = [
   { id: "sand", color: "#a89170", label: "Sand" },
 ];
 
-// Achievements — icon is now a line-icon name, not an emoji.
 export type Achievement = {
   id: string;
   label: string;
@@ -23,11 +20,11 @@ export type Achievement = {
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
-  { id: "first-report", label: "First Report", description: "Submitted your first issue", icon: "pin", earned: true },
-  { id: "ten-reports", label: "10 Reports", description: "Submitted 10 issues", icon: "megaphone", earned: false },
+  { id: "first-report", label: "First Report", description: "Submitted your first pin", icon: "pin", earned: true },
+  { id: "ten-reports", label: "10 Reports", description: "Submitted 10 pins", icon: "megaphone", earned: false },
   { id: "first-volunteer", label: "First Volunteer", description: "Volunteered for a cause", icon: "hands", earned: true },
-  { id: "donor", label: "Community Donor", description: "Donated to a verified cause", icon: "heart", earned: true },
-  { id: "verified-hero", label: "Verified Hero", description: "5 of your reports were verified", icon: "check", earned: false },
+  { id: "donor", label: "Community Donor", description: "Donated to a verified cause", icon: "dollar", earned: true },
+  { id: "verified-hero", label: "Verified Hero", description: "5 of your pins were verified", icon: "check", earned: false },
   { id: "island-guardian", label: "Island Guardian", description: "Active for 6+ months", icon: "shield", earned: true },
 ];
 

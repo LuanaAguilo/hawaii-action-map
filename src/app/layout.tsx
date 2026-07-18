@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={spaceGrotesk.variable}>
-      <body className="bg-[var(--background)]">
+      <body className="bg-[var(--background)]" suppressHydrationWarning>
         <main className="mx-auto min-h-screen w-full max-w-5xl pb-24">
           {children}
         </main>
