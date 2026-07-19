@@ -19,6 +19,7 @@ export default function ReportPage() {
   const [location, setLocation] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [showMissing, setShowMissing] = useState(false);
 
   const category = suggestCategory(description);
   const urgency = suggestUrgency(description, category);
@@ -32,25 +33,45 @@ export default function ReportPage() {
 
   const showAI = description.trim().length > 10;
 
-  const steps = [!!photo, title.trim().length > 0, description.trim().length >= 10, location.trim().length > 0];
-  const done = steps.filter(Boolean).length;
-  const canSubmit = done === steps.length;
+  const missing: string[] = [];
+  if (!photo) missing.push("a photo");
+  if (title.trim().length === 0) missing.push("a title");
+  if (description.trim().length < 10) missing.push("a description");
+  if (location.trim().length === 0) missing.push("a location");
+  const canSubmit = missing.length === 0;
+
+  function handleSubmit() {
+    if (canSubmit) {
+      setSubmitted(true);
+    } else {
+      // pop the missing message, then fade it out
+      setShowMissing(true);
+      window.clearTimeout((handleSubmit as any)._t);
+      (handleSubmit as any)._t = window.setTimeout(() => setShowMissing(false), 2600);
+    }
+  }
 
   function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) setPhoto(URL.createObjectURL(file));
   }
 
+  function formatMissing(items: string[]) {
+    if (items.length === 1) return items[0];
+    if (items.length === 2) return `${items[0]} and ${items[1]}`;
+    return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+  }
+
   if (submitted) {
     return (
-      <div className="mx-auto max-w-xl px-6 py-24 text-center">
-        <div className="animate-rise mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-forest text-white shadow-2xl">
+      <div className="mx-auto flex min-h-[calc(100vh-7rem)] max-w-xl flex-col items-center justify-center px-6 text-center">
+        <div className="animate-rise flex h-20 w-20 items-center justify-center rounded-full bg-forest text-white shadow-2xl">
           <Icon name="check" className="h-11 w-11" />
         </div>
-        <h1 className="animate-rise mt-5 font-display text-2xl font-bold text-[var(--foreground)]">
+        <h1 className="animate-rise mt-5 text-2xl font-bold text-[var(--foreground)]">
           Pin submitted
         </h1>
-        <p className="animate-rise mt-2 text-sm text-neutral-500">
+        <p className="animate-rise mt-2 text-sm text-[var(--muted)]">
           Pending community verification. Once neighbors confirm it, it becomes
           official and routes to the county.
         </p>
@@ -70,7 +91,7 @@ export default function ReportPage() {
               setLocation("");
               setPhoto(null);
             }}
-            className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-sm font-medium text-neutral-600 hover:text-forest"
+            className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-sm font-medium text-[var(--muted)] hover:text-forest"
           >
             Create another
           </button>
@@ -80,18 +101,18 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl px-4 pb-8 pt-5">
+    <div className="mx-auto max-w-xl px-4 pb-10 pt-5">
       {/* Header */}
       <div className="mb-4 animate-rise">
-        <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--foreground)]">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
           Create a Pin
         </h1>
-        <p className="mt-0.5 text-sm text-neutral-500">
+        <p className="mt-0.5 text-sm text-[var(--muted)]">
           Snap it, describe it — we handle the rest
         </p>
       </div>
 
-      {/* AI promise banner — sells the magic upfront */}
+      {/* AI promise banner */}
       <div
         className="animate-rise mb-4 flex items-start gap-3 rounded-2xl border border-forest/20 bg-forest/[0.04] p-4"
         style={{ animationDelay: "0.04s" }}
@@ -99,7 +120,7 @@ export default function ReportPage() {
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-forest text-white">
           <Icon name="sparkle" className="h-5 w-5" />
         </div>
-        <div className="text-xs leading-relaxed text-neutral-600">
+        <div className="text-xs leading-relaxed text-[var(--muted)]">
           <span className="font-bold text-forest">AI does the work.</span> It reads your
           description, picks the category, sets urgency, writes a clean summary, checks
           for duplicates, and routes it to the right county department.
@@ -111,7 +132,7 @@ export default function ReportPage() {
         {photo ? (
           <div className="relative overflow-hidden rounded-2xl border border-[var(--border)] shadow-md">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={photo} alt="Your photo" className="aspect-[16/10] w-full object-cover" />
+            <img src={photo} alt="Your photo" className="aspect-[16/9] w-full object-cover" />
             <button
               onClick={() => setPhoto(null)}
               className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-black/80"
@@ -124,22 +145,22 @@ export default function ReportPage() {
             </span>
           </div>
         ) : (
-          <label className="group relative flex aspect-[16/10] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-[var(--border)] shadow-sm transition hover:shadow-lg">
+          <label className="group relative flex aspect-[16/9] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-[var(--border)] shadow-sm transition hover:shadow-xl">
             <div
-              className="absolute inset-0"
+              className="absolute inset-0 transition duration-500 group-hover:scale-105"
               style={{
                 background:
                   "linear-gradient(135deg, #2d4a3e 0%, #3f6152 45%, #8b6f52 100%)",
               }}
             />
             <div className="relative flex flex-col items-center text-white">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 backdrop-blur transition group-hover:scale-110">
-                <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur transition group-hover:scale-110">
+                <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
                 </svg>
               </div>
-              <div className="mt-3 font-display text-lg font-bold">Add a photo</div>
+              <div className="mt-2.5 text-lg font-bold">Add a photo</div>
               <div className="mt-0.5 text-xs text-white/70">
                 Photos are how pins get verified
               </div>
@@ -161,7 +182,7 @@ export default function ReportPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Broken bathroom at Kealia Beach"
-              className="w-full border-0 border-b border-[var(--border)] bg-transparent px-0 py-1.5 text-sm text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none focus:ring-0"
+              className="w-full border-0 border-b border-[var(--border)] bg-transparent px-0 py-2 text-base text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none focus:ring-0"
             />
           </Field>
 
@@ -171,7 +192,7 @@ export default function ReportPage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="Describe the problem in your own words..."
-              className="w-full resize-none border-0 border-b border-[var(--border)] bg-transparent px-0 py-1.5 text-sm text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none focus:ring-0"
+              className="w-full resize-none border-0 border-b border-[var(--border)] bg-transparent px-0 py-2 text-base text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none focus:ring-0"
             />
           </Field>
 
@@ -181,15 +202,33 @@ export default function ReportPage() {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Kealia Beach"
-              className="w-full border-0 border-b border-[var(--border)] bg-transparent px-0 py-1.5 text-sm text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none focus:ring-0"
+              className="w-full border-0 border-b border-[var(--border)] bg-transparent px-0 py-2 text-base text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none focus:ring-0"
             />
           </Field>
         </div>
       </div>
 
+      {/* Submit */}
+      <button
+        onClick={handleSubmit}
+        style={{ backgroundColor: "#2d4a3e", color: "#fff" }}
+        className="animate-rise mt-4 w-full rounded-xl py-4 text-base font-bold shadow-md transition hover:opacity-90 active:scale-[0.99]"
+      >
+        Submit Pin
+      </button>
+
+      {/* Missing message — pops up then fades */}
+      <p
+        className={`mt-2.5 text-center text-xs font-medium text-rose transition-all duration-500 ${
+          showMissing ? "opacity-100 translate-y-0" : "pointer-events-none -translate-y-1 opacity-0"
+        }`}
+      >
+        Please add {formatMissing(missing)} to submit.
+      </p>
+
       {/* AI reveal */}
       {showAI && (
-        <div className="animate-rise mt-4 overflow-hidden rounded-2xl border border-forest/25 shadow-md">
+        <div className="animate-rise mt-6 overflow-hidden rounded-2xl border border-forest/25 shadow-md">
           <div className="flex items-center justify-between bg-forest px-5 py-3 text-white">
             <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide">
               <Icon name="sparkle" className="h-4 w-4" />
@@ -217,32 +256,17 @@ export default function ReportPage() {
               <Chip label="Routes to" value={department} />
             </div>
 
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-neutral-400">
+            <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-[var(--muted-2)]">
               Public summary
             </p>
-            <p className="mb-3 text-sm text-neutral-600">{publicSummary}</p>
+            <p className="mb-3 text-sm text-[var(--muted)]">{publicSummary}</p>
 
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-neutral-400">
+            <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-[var(--muted-2)]">
               County summary
             </p>
-            <p className="text-sm text-neutral-600">{countySummary}</p>
+            <p className="text-sm text-[var(--muted)]">{countySummary}</p>
           </div>
         </div>
-      )}
-
-      {/* Submit */}
-      <button
-        onClick={() => setSubmitted(true)}
-        disabled={!canSubmit}
-        style={canSubmit ? { backgroundColor: "#2d4a3e", color: "#fff" } : {}}
-        className="mt-5 w-full rounded-xl py-4 text-sm font-bold shadow-lg transition disabled:cursor-not-allowed disabled:bg-[var(--surface-2)] disabled:text-neutral-400 disabled:shadow-none"
-      >
-        {canSubmit ? "Submit Pin" : "Submit Pin"}
-      </button>
-      {!canSubmit && (
-        <p className="mt-2 text-center text-xs text-neutral-400">
-          {4 - done} field{4 - done === 1 ? "" : "s"} left
-        </p>
       )}
     </div>
   );
@@ -251,7 +275,7 @@ export default function ReportPage() {
 function Chip({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl bg-[var(--surface-2)] px-3 py-2 text-center">
-      <div className="text-[9px] font-bold uppercase tracking-wide text-neutral-400">{label}</div>
+      <div className="text-[9px] font-bold uppercase tracking-wide text-[var(--muted-2)]">{label}</div>
       <div className="mt-0.5 text-[11px] font-semibold leading-tight text-forest">{value}</div>
     </div>
   );
@@ -294,7 +318,7 @@ function Field({
         <FieldIcon name={iconPath} />
       </div>
       <div className="flex-1">
-        <label className="mb-0.5 block text-[11px] font-bold uppercase tracking-wide text-neutral-400">
+        <label className="mb-1.5 block text-base font-bold text-[var(--foreground)]">
           {label}
         </label>
         {children}

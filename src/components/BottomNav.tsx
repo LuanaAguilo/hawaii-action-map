@@ -60,7 +60,7 @@ export default function BottomNav() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </span>
-          <span className="mt-2 text-sm font-bold text-forest">Pin</span>
+          <span className="mt-2 text-sm font-bold text-forest">Report</span>
         </Link>
 
         {TABS.slice(2).map((tab) => (

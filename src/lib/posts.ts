@@ -1,5 +1,4 @@
 // Community feed posts — the "Rants & Raves replacement".
-// A mix of safety alerts, accidents, civic issues, lost & found, and notices.
 
 export type PostType =
   | "safety"
@@ -22,9 +21,9 @@ export type FeedPost = {
   comments: number;
   topComment?: { author: string; text: string };
   hot: boolean;
+  image?: string;
 };
 
-// Colors + labels + icon name for each type.
 export const POST_TYPES: Record<PostType, { label: string; color: string; icon: string }> = {
   safety: { label: "Safety Alert", color: "#c0392b", icon: "shield" },
   accident: { label: "Accident / Traffic", color: "#d97706", icon: "flame" },
@@ -48,6 +47,7 @@ export const FEED_POSTS: FeedPost[] = [
     comments: 34,
     topComment: { author: "Nani P.", text: "Saw him too! Dark hoodie, took off toward the highway." },
     hot: true,
+    image: "/community-sketchy-guy.png",
   },
   {
     id: "p2",
@@ -76,6 +76,7 @@ export const FEED_POSTS: FeedPost[] = [
     comments: 41,
     topComment: { author: "Auntie Rose", text: "Sharing! That looks like the Kahale family's dog." },
     hot: true,
+    image: "/community-dog.png",
   },
   {
     id: "p4",
@@ -104,6 +105,7 @@ export const FEED_POSTS: FeedPost[] = [
     comments: 12,
     topComment: { author: "Malia K.", text: "Confirmed, hit it yesterday. County needs to fix this." },
     hot: false,
+    image: "/community-pothole.png",
   },
   {
     id: "p6",

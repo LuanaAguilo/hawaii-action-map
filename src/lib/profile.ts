@@ -21,8 +21,8 @@ export type Achievement = {
 
 export const ACHIEVEMENTS: Achievement[] = [
   { id: "first-report", label: "First Report", description: "Submitted your first pin", icon: "pin", earned: true },
-  { id: "ten-reports", label: "10 Reports", description: "Submitted 10 pins", icon: "megaphone", earned: false },
-  { id: "first-volunteer", label: "First Volunteer", description: "Volunteered for a cause", icon: "hands", earned: true },
+  { id: "ten-reports", label: "10 Reports", description: "Submitted 10 pins", icon: "trophy", earned: false },
+  { id: "first-volunteer", label: "First Volunteer", description: "Volunteered for a cause", icon: "heart", earned: true },
   { id: "donor", label: "Community Donor", description: "Donated to a verified cause", icon: "dollar", earned: true },
   { id: "verified-hero", label: "Verified Hero", description: "5 of your pins were verified", icon: "check", earned: false },
   { id: "island-guardian", label: "Island Guardian", description: "Active for 6+ months", icon: "shield", earned: true },

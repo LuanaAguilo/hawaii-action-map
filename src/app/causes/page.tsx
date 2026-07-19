@@ -123,20 +123,20 @@ export default function CausesPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-5">
       <div className="mb-4 animate-rise">
-        <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--foreground)]">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
           Pins
         </h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Verified issues the community is acting on · Kauaʻi
+          Verified reports the community is acting on
         </p>
       </div>
 
       <Link
         href="/report"
-        className="animate-rise mb-5 flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-forest/30 bg-forest/5 px-5 py-4 text-sm font-semibold text-forest transition hover:border-forest/60 hover:bg-forest/10"
-        style={{ animationDelay: "0.05s" }}
+        style={{ backgroundColor: "#2d4a3e", color: "#fff", animationDelay: "0.05s" }}
+        className="animate-rise mb-5 flex items-center justify-center gap-2 rounded-2xl px-5 py-4 text-base font-bold shadow-md transition hover:opacity-90"
       >
-        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
         Report an Issue

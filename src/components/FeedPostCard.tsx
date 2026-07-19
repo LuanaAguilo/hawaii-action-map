@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Icon from "@/components/Icon";
 import { FeedPost, POST_TYPES } from "@/lib/posts";
 
 function ActionIcon({ name }: { name: string }) {
-  const c = "h-[18px] w-[18px]";
+  const c = "h-[17px] w-[17px]";
   if (name === "react")
     return (
       <svg className={c} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.7}>
@@ -48,79 +49,65 @@ export default function FeedPostCard({ post }: { post: FeedPost }) {
   }
 
   return (
-    <div
-      className="card-lift overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm"
-      style={{ borderLeft: `3px solid ${type.color}` }}
-    >
+    <div className="card-lift overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)]">
       {/* Poster row */}
-      <div className="flex items-start gap-3 px-5 pt-4">
+      <div className="flex items-center gap-3 px-6 pt-5">
         <div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold text-white"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
           style={{ backgroundColor: post.poster.color }}
         >
           {post.poster.initials}
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="text-sm font-bold text-[var(--foreground)]">{post.poster.name}</span>
-            <span className="rounded-md bg-[var(--surface-2)] px-1.5 py-0.5 text-[10px] font-semibold text-neutral-500">
-              {post.poster.level}
-            </span>
-            <span
-              className="rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
-              style={{ backgroundColor: type.color + "1a", color: type.color }}
-            >
-              {type.label}
-            </span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm font-semibold text-[var(--foreground)]">{post.poster.name}</span>
+            {post.verified && <Icon name="check" className="h-3.5 w-3.5 text-forest" />}
           </div>
-          <p className="mt-0.5 text-xs text-neutral-400">
+          <p className="text-xs text-[var(--muted-2)]">
             {post.location} · {post.timeAgo}
           </p>
         </div>
 
-        <div className="flex shrink-0 flex-col items-end gap-1">
-          {post.verified ? (
-            <span className="flex items-center gap-1 text-[10px] font-bold text-forest">
-              <Icon name="check" className="h-3.5 w-3.5" />
-              VERIFIED
-            </span>
-          ) : (
-            <span className="text-[10px] font-semibold text-neutral-400">UNVERIFIED</span>
-          )}
-          {post.hot && (
-            <span
-              className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white"
-              style={{ backgroundColor: "#c17b8a" }}
-            >
-              Trending
-            </span>
-          )}
-        </div>
+        <span
+          className="shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider"
+          style={{ backgroundColor: type.color + "14", color: type.color }}
+        >
+          {type.label}
+        </span>
       </div>
 
       {/* Body */}
-      <div className="px-5 pt-3">
-        <h3 className="font-display text-[17px] font-bold leading-snug text-[var(--foreground)]">
+      <div className="px-6 pt-4">
+        <h3 className="text-[17px] font-bold leading-snug tracking-[-0.01em] text-[var(--foreground)]">
           {post.title}
         </h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-neutral-600">{post.body}</p>
+        <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--muted)]">{post.body}</p>
       </div>
 
-      {/* Counts */}
-      <div className="flex items-center gap-3 px-5 pb-2 pt-3 text-xs text-neutral-400">
-        <span>
-          <span className="font-bold text-neutral-600">{reactions}</span> reactions
-        </span>
-        <span>·</span>
-        <span>
-          <span className="font-bold text-neutral-600">{comments.length}</span>{" "}
-          {comments.length === 1 ? "comment" : "comments"}
-        </span>
+      {/* Photo */}
+      {post.image && (
+        <div className="relative mt-4 aspect-[16/10] w-full">
+          <Image src={post.image} alt={post.title} fill className="object-cover" />
+        </div>
+      )}
+
+      {/* Meta */}
+      <div className="flex items-center gap-1.5 px-6 pb-4 pt-4 text-[11px] text-[var(--muted-2)]">
+        <span className="font-semibold text-[var(--foreground)]">{reactions}</span> reactions
+        <span className="opacity-40">·</span>
+        <span className="font-semibold text-[var(--foreground)]">{comments.length}</span>
+        {comments.length === 1 ? "comment" : "comments"}
+        {post.hot && (
+          <>
+            <span className="opacity-40">·</span>
+            <span className="font-semibold text-rose">Trending</span>
+          </>
+        )}
       </div>
 
       {/* Action bar */}
-      <div className="mx-5 mb-4 grid grid-cols-3 gap-2">
+      <div className="mx-6 mb-5 flex gap-2">
         <ActionBtn active={reacted} onClick={toggleReact} icon="react" label="React" />
         <ActionBtn active={showComments} onClick={() => setShowComments((s) => !s)} icon="comment" label="Comment" />
         <ActionBtn active={saved} onClick={() => setSaved((s) => !s)} icon="save" label={saved ? "Saved" : "Save"} />
@@ -130,50 +117,49 @@ export default function FeedPostCard({ post }: { post: FeedPost }) {
       {!showComments && comments.length > 0 && (
         <button
           onClick={() => setShowComments(true)}
-          className="flex w-full items-start gap-2.5 border-t border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-left transition hover:bg-[var(--surface-2)]"
+          className="flex w-full items-start gap-3 border-t border-[var(--border)] px-6 py-4 text-left transition hover:bg-[var(--surface-2)]/60"
         >
-          <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-300 text-[9px] font-bold text-white">
+          <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--muted-2)] text-[9px] font-bold text-white">
             {comments[0].author.slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <div className="text-[11px] font-bold text-[var(--foreground)]">{comments[0].author}</div>
-            <div className="text-sm leading-snug text-neutral-600">{comments[0].text}</div>
+            <span className="text-xs font-semibold text-[var(--foreground)]">{comments[0].author} </span>
+            <span className="text-[13px] text-[var(--muted)]">{comments[0].text}</span>
           </div>
         </button>
       )}
 
       {/* Expanded comments */}
       {showComments && (
-        <div className="border-t border-[var(--border)] bg-[var(--surface)] px-5 py-4">
-          <div className="mb-3 flex gap-2">
+        <div className="border-t border-[var(--border)] px-6 py-5">
+          <div className="mb-4 flex gap-2.5">
             <input
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && postComment()}
               placeholder="Add your voice..."
-              className="flex-1 rounded-xl border border-[var(--border)] bg-white px-3.5 py-2.5 text-sm text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none"
+              className="flex-1 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder-[var(--muted-2)] focus:border-forest focus:outline-none"
             />
             <button
               onClick={postComment}
-              style={{ backgroundColor: "#2d4a3e", color: "#fff" }}
-              className="rounded-xl px-4 py-2.5 text-sm font-bold hover:opacity-90"
+              className="rounded-xl bg-forest px-5 py-2.5 text-sm font-bold text-white hover:opacity-90"
             >
               Post
             </button>
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             {comments.map((c, i) => (
-              <div key={i} className="flex items-start gap-2.5">
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-neutral-300 text-[9px] font-bold text-white">
+              <div key={i} className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--muted-2)] text-[9px] font-bold text-white">
                   {c.author.slice(0, 2).toUpperCase()}
                 </div>
-                <div className="min-w-0 flex-1 rounded-xl bg-white px-3.5 py-2.5 shadow-sm">
+                <div className="min-w-0 flex-1 rounded-2xl bg-[var(--surface-2)] px-4 py-2.5">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-[11px] font-bold text-[var(--foreground)]">{c.author}</span>
-                    <span className="text-[10px] text-neutral-400">{c.time}</span>
+                    <span className="text-xs font-semibold text-[var(--foreground)]">{c.author}</span>
+                    <span className="text-[10px] text-[var(--muted-2)]">{c.time}</span>
                   </div>
-                  <p className="mt-0.5 text-sm leading-snug text-neutral-600">{c.text}</p>
+                  <p className="mt-0.5 text-[13px] leading-snug text-[var(--muted)]">{c.text}</p>
                 </div>
               </div>
             ))}
@@ -198,8 +184,8 @@ function ActionBtn({
   return (
     <button
       onClick={onClick}
-      style={active ? { backgroundColor: "#2d4a3e", color: "#fff", borderColor: "#2d4a3e" } : {}}
-      className="flex items-center justify-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2.5 text-xs font-bold text-neutral-500 transition hover:border-forest/40 hover:text-forest"
+      style={{ backgroundColor: "#2d4a3e", color: "#fff" }}
+      className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition hover:opacity-90"
     >
       <ActionIcon name={icon} />
       {label}
