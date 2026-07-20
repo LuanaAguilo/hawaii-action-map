@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import FeedPostCard from "@/components/FeedPostCard";
 import { FEED_POSTS, PostType } from "@/lib/posts";
@@ -35,13 +36,24 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
             Community
           </h1>
-          <span className="flex items-center gap-1.5 rounded-full bg-rose/10 px-3 py-1 text-xs font-bold text-rose">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-rose"></span>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 rounded-full bg-rose/10 px-3 py-1 text-xs font-bold text-rose">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-rose"></span>
+              </span>
+              LIVE
             </span>
-            LIVE
-          </span>
+            <Link
+              href="/search"
+              aria-label="Search"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] transition hover:border-forest/40 hover:text-forest"
+            >
+              <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+            </Link>
+          </div>
         </div>
         <p className="mt-1 text-sm text-[var(--muted)]">
           <span className="font-semibold text-forest">142 neighbors</span> active now · 6 new posts today
