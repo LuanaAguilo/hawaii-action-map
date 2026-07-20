@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import FeedPostCard from "@/components/FeedPostCard";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLanguage } from "@/lib/language";
 import { FEED_POSTS, PostType } from "@/lib/posts";
 
 const FILTERS: { label: string; match: PostType | "all" | "hot" }[] = [
@@ -17,6 +19,7 @@ const FILTERS: { label: string; match: PostType | "all" | "hot" }[] = [
 ];
 
 export default function DashboardPage() {
+  const { t } = useLanguage();
   const [active, setActive] = useState(0);
   const [postText, setPostText] = useState("");
 
@@ -34,16 +37,10 @@ export default function DashboardPage() {
       <div className="mb-5 animate-rise">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
-            Community
+            {t("community.title")}
           </h1>
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 rounded-full bg-rose/10 px-3 py-1 text-xs font-bold text-rose">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-rose"></span>
-              </span>
-              LIVE
-            </span>
+            <LanguageToggle />
             <Link
               href="/search"
               aria-label="Search"
@@ -76,7 +73,7 @@ export default function DashboardPage() {
             />
             <div className="mt-2.5 flex items-center justify-end">
               <button className="rounded-xl bg-white px-6 py-2 text-sm font-bold text-[var(--forest)] transition hover:opacity-90">
-                Post
+                {t("action.post")}
               </button>
             </div>
           </div>

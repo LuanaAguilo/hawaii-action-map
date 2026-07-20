@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Icon from "@/components/Icon";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLanguage } from "@/lib/language";
 
 type Cause = {
   id: string;
@@ -115,6 +117,7 @@ const STATUS_COLORS: Record<string, string> = {
 const FILTERS = ["All", "Needs Volunteers", "Needs Funding", "Sent to County", "Resolved"];
 
 export default function CausesPage() {
+  const { t } = useLanguage();
   const [active, setActive] = useState(0);
 
   const filter = FILTERS[active];
@@ -123,11 +126,25 @@ export default function CausesPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-5">
       <div className="mb-4 animate-rise">
-        <h1 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
-          Pins
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
+            {t("pins.title")}
+          </h1>
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <Link
+              href="/search"
+              aria-label="Search"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] transition hover:border-forest/40 hover:text-forest"
+            >
+              <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+            </Link>
+          </div>
+        </div>
         <p className="mt-1 text-sm text-neutral-500">
-          Verified reports the community is acting on
+          {t("pins.subtitle")}
         </p>
       </div>
 
@@ -139,7 +156,7 @@ export default function CausesPage() {
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
-        Report an Issue
+        {t("action.reportIssue")}
       </Link>
 
       <div
@@ -184,11 +201,11 @@ export default function CausesPage() {
                   </span>
                   <span className="flex items-center gap-1 text-[11px] font-semibold text-forest">
                     <Icon name="shield" className="h-3.5 w-3.5" />
-                    Verified
+                    {t("misc.verified")}
                   </span>
                 </div>
 
-                <h3 className="font-display text-lg font-semibold text-[var(--foreground)]">
+                <h3 className="text-lg font-semibold text-[var(--foreground)]">
                   {cause.title}
                 </h3>
                 <p className="mt-0.5 text-xs text-neutral-500">
@@ -247,10 +264,10 @@ export default function CausesPage() {
                       style={{ backgroundColor: "#2d4a3e", color: "#fff" }}
                       className="rounded-lg py-2.5 text-sm font-semibold hover:opacity-90"
                     >
-                      {cause.status === "Needs Funding" ? "Contribute" : "Volunteer"}
+                      {cause.status === "Needs Funding" ? t("action.contribute") : t("action.volunteer")}
                     </button>
                     <button className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] py-2.5 text-sm font-medium text-neutral-600 hover:text-forest">
-                      Follow
+                      {t("action.follow")}
                     </button>
                   </div>
                 )}

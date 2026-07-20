@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/lib/language";
 
 function TabIcon({ name }: { name: string }) {
   const c = "h-9 w-9";
@@ -34,24 +35,25 @@ function TabIcon({ name }: { name: string }) {
   }
 }
 
-const TABS = [
-  { href: "/", label: "Map", icon: "map" },
-  { href: "/dashboard", label: "Community", icon: "community" },
-  { href: "/causes", label: "Pins", icon: "pins" },
-  { href: "/profile", label: "Profile", icon: "profile" },
-];
-
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const tabs = [
+    { href: "/", label: t("nav.map"), icon: "map" },
+    { href: "/dashboard", label: t("nav.community"), icon: "community" },
+    { href: "/causes", label: t("nav.pins"), icon: "pins" },
+    { href: "/profile", label: t("nav.profile"), icon: "profile" },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 border-t border-[var(--border)] bg-[var(--surface)]/98 backdrop-blur">
       <div className="mx-auto flex max-w-xl items-end justify-around px-4 pb-4 pt-4">
-        {TABS.slice(0, 2).map((tab) => (
+        {tabs.slice(0, 2).map((tab) => (
           <TabLink key={tab.href} tab={tab} active={pathname === tab.href} />
         ))}
 
-        <Link href="/report" className="flex flex-col items-center" aria-label="Create a Pin">
+        <Link href="/report" className="flex flex-col items-center" aria-label={t("nav.report")}>
           <span
             className="-mt-9 flex h-[72px] w-[72px] items-center justify-center rounded-full text-white shadow-2xl ring-4 ring-[var(--surface)]"
             style={{ backgroundColor: "#2d4a3e" }}
@@ -60,10 +62,10 @@ export default function BottomNav() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </span>
-          <span className="mt-2 text-sm font-bold text-forest">Report</span>
+          <span className="mt-2 text-sm font-bold text-forest">{t("nav.report")}</span>
         </Link>
 
-        {TABS.slice(2).map((tab) => (
+        {tabs.slice(2).map((tab) => (
           <TabLink key={tab.href} tab={tab} active={pathname === tab.href} />
         ))}
       </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Icon from "@/components/Icon";
 import { FeedPost, POST_TYPES } from "@/lib/posts";
+import { useLanguage } from "@/lib/language";
 
 function ActionIcon({ name }: { name: string }) {
   const c = "h-[17px] w-[17px]";
@@ -28,6 +29,7 @@ function ActionIcon({ name }: { name: string }) {
 
 export default function FeedPostCard({ post }: { post: FeedPost }) {
   const type = POST_TYPES[post.type];
+  const { t } = useLanguage();
   const [reactions, setReactions] = useState(post.reactions);
   const [reacted, setReacted] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -73,7 +75,7 @@ export default function FeedPostCard({ post }: { post: FeedPost }) {
           className="shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider"
           style={{ backgroundColor: type.color + "14", color: type.color }}
         >
-          {type.label}
+          {t(`cat.${post.type}`)}
         </span>
       </div>
 
@@ -101,16 +103,16 @@ export default function FeedPostCard({ post }: { post: FeedPost }) {
         {post.hot && (
           <>
             <span className="opacity-40">·</span>
-            <span className="font-semibold text-rose">Trending</span>
+            <span className="font-semibold text-rose">{t("misc.trending")}</span>
           </>
         )}
       </div>
 
       {/* Action bar */}
       <div className="mx-6 mb-5 flex gap-2">
-        <ActionBtn active={reacted} onClick={toggleReact} icon="react" label="React" />
-        <ActionBtn active={showComments} onClick={() => setShowComments((s) => !s)} icon="comment" label="Comment" />
-        <ActionBtn active={saved} onClick={() => setSaved((s) => !s)} icon="save" label={saved ? "Saved" : "Save"} />
+        <ActionBtn active={reacted} onClick={toggleReact} icon="react" label={t("action.react")} />
+        <ActionBtn active={showComments} onClick={() => setShowComments((s) => !s)} icon="comment" label={t("action.comment")} />
+        <ActionBtn active={saved} onClick={() => setSaved((s) => !s)} icon="save" label={saved ? t("action.saved") : t("action.save")} />
       </div>
 
       {/* Top comment preview */}
@@ -144,7 +146,7 @@ export default function FeedPostCard({ post }: { post: FeedPost }) {
               onClick={postComment}
               className="rounded-xl bg-forest px-5 py-2.5 text-sm font-bold text-white hover:opacity-90"
             >
-              Post
+              {t("action.post")}
             </button>
           </div>
 

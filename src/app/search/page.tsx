@@ -14,16 +14,16 @@ const PLACEHOLDERS = [
 ];
 
 const CATEGORIES = [
-  { label: "Where can I volunteer?", sub: "Ways to show up for the island", icon: "volunteer", color: "#2d4a3e" },
-  { label: "Safety alerts", sub: "Break-ins, hazards & warnings", icon: "safety", color: "#c0392b" },
-  { label: "Lost & found", sub: "Pets, keys & belongings", icon: "lostfound", color: "#4a6d7c" },
-  { label: "Road closures", sub: "Traffic, wrecks & potholes", icon: "roads", color: "#d97706" },
-  { label: "Trending now", sub: "What the island is talking about", icon: "trending", color: "#c17b8a" },
-  { label: "Wildlife protection", sub: "Habitat, cleanups & our ʻāina", icon: "wildlife", color: "#5c6e4a" },
+  { label: "Where can I volunteer?", short: "Volunteer", sub: "Show up for the island", icon: "volunteer", color: "#2d4a3e" },
+  { label: "Safety alerts", short: "Safety", sub: "Hazards & warnings", icon: "safety", color: "#c0392b" },
+  { label: "Lost & found", short: "Lost & found", sub: "Pets & belongings", icon: "lostfound", color: "#4a6d7c" },
+  { label: "Road closures", short: "Roads", sub: "Traffic & closures", icon: "roads", color: "#d97706" },
+  { label: "Trending now", short: "Trending", sub: "What's buzzing", icon: "trending", color: "#c17b8a" },
+  { label: "Wildlife protection", short: "Wildlife", sub: "Habitat & ʻāina", icon: "wildlife", color: "#5c6e4a" },
 ];
 
 function CategoryIcon({ name }: { name: string }) {
-  const c = "h-6 w-6";
+  const c = "h-5 w-5";
   switch (name) {
     case "volunteer":
       return (
@@ -134,30 +134,27 @@ export default function SearchPage() {
         </div>
       </div>
 
-      {/* Browse categories */}
+      {/* Browse categories — compact 2-column grid */}
       {!result && !thinking && (
         <div className="animate-rise" style={{ animationDelay: "0.1s" }}>
           <h2 className="mb-4 text-lg font-bold text-[var(--foreground)]">Explore</h2>
-          <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.label}
                 onClick={() => runSearch(cat.label)}
-                className="card-lift flex w-full items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-left shadow-sm"
+                className="card-lift flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-left shadow-sm"
               >
                 <div
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
                   style={{ backgroundColor: cat.color + "14", color: cat.color }}
                 >
                   <CategoryIcon name={cat.icon} />
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-base font-bold text-[var(--foreground)]">{cat.label}</div>
-                  <div className="mt-0.5 text-xs text-[var(--muted-2)]">{cat.sub}</div>
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-bold text-[var(--foreground)]">{cat.short}</div>
+                  <div className="truncate text-[11px] text-[var(--muted-2)]">{cat.sub}</div>
                 </div>
-                <svg className="h-5 w-5 shrink-0 text-[var(--muted-2)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                </svg>
               </button>
             ))}
           </div>

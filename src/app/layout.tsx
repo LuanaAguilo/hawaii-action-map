@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import BottomNav from "@/components/BottomNav";
+import { LanguageProvider } from "@/lib/language";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -23,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={jakarta.variable}>
       <body className="bg-[var(--background)]" suppressHydrationWarning>
-        <main className="mx-auto min-h-screen w-full max-w-5xl pb-24">
-          {children}
-        </main>
-        <BottomNav />
+        <LanguageProvider>
+          <main className="mx-auto min-h-screen w-full max-w-5xl pb-24">
+            {children}
+          </main>
+          <BottomNav />
+        </LanguageProvider>
       </body>
     </html>
   );

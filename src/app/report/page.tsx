@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import { SAMPLE_ISSUES } from "@/lib/issues";
+import { nearestPlace } from "@/lib/geo";
 import {
   suggestCategory,
   suggestUrgency,
@@ -17,6 +18,9 @@ export default function ReportPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locateError, setLocateError] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [showMissing, setShowMissing] = useState(false);
@@ -44,7 +48,6 @@ export default function ReportPage() {
     if (canSubmit) {
       setSubmitted(true);
     } else {
-      // pop the missing message, then fade it out
       setShowMissing(true);
       window.clearTimeout((handleSubmit as any)._t);
       (handleSubmit as any)._t = window.setTimeout(() => setShowMissing(false), 2600);
@@ -56,10 +59,27 @@ export default function ReportPage() {
     if (file) setPhoto(URL.createObjectURL(file));
   }
 
-  function formatMissing(items: string[]) {
-    if (items.length === 1) return items[0];
-    if (items.length === 2) return `${items[0]} and ${items[1]}`;
-    return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+  function useMyLocation() {
+    if (!("geolocation" in navigator)) {
+      setLocateError("Location isn't available on this device.");
+      return;
+    }
+    setLocating(true);
+    setLocateError("");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const place = nearestPlace(latitude, longitude);
+        setLocation(place.label);
+        setCoords({ lat: latitude, lng: longitude });
+        setLocating(false);
+      },
+      () => {
+        setLocateError("Couldn't get your location — check permissions and try again.");
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   }
 
   if (submitted) {
@@ -89,6 +109,7 @@ export default function ReportPage() {
               setTitle("");
               setDescription("");
               setLocation("");
+              setCoords(null);
               setPhoto(null);
             }}
             className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-sm font-medium text-[var(--muted)] hover:text-forest"
@@ -200,10 +221,45 @@ export default function ReportPage() {
             <input
               type="text"
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => {
+                setLocation(e.target.value);
+                setCoords(null);
+              }}
               placeholder="Kealia Beach"
               className="w-full border-0 border-b border-[var(--border)] bg-transparent px-0 py-2 text-base text-[var(--foreground)] placeholder-neutral-400 focus:border-forest focus:outline-none focus:ring-0"
             />
+            <button
+              onClick={useMyLocation}
+              disabled={locating}
+              className="mt-2.5 flex items-center gap-2 rounded-full border border-forest/30 bg-forest/5 px-4 py-2 text-xs font-bold text-forest transition hover:bg-forest hover:text-white disabled:opacity-60"
+            >
+              {locating ? (
+                <>
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-forest opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-current" />
+                  </span>
+                  Finding you...
+                </>
+              ) : (
+                <>
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                  </svg>
+                  Use my current location
+                </>
+              )}
+            </button>
+            {coords && (
+              <p className="mt-1.5 flex items-center gap-1 text-[11px] font-medium text-forest">
+                <Icon name="check" className="h-3.5 w-3.5" />
+                Exact location captured
+              </p>
+            )}
+            {locateError && (
+              <p className="mt-1.5 text-[11px] font-medium text-rose">{locateError}</p>
+            )}
           </Field>
         </div>
       </div>
@@ -217,7 +273,7 @@ export default function ReportPage() {
         Submit Pin
       </button>
 
-      {/* Missing message — pops up then fades */}
+      {/* Missing message */}
       <p
         className={`mt-2.5 text-center text-xs font-medium text-rose transition-all duration-500 ${
           showMissing ? "opacity-100 translate-y-0" : "pointer-events-none -translate-y-1 opacity-0"
@@ -270,6 +326,13 @@ export default function ReportPage() {
       )}
     </div>
   );
+}
+
+function formatMissing(items: string[]) {
+  if (items.length === 0) return "";
+  if (items.length === 1) return items[0];
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
 }
 
 function Chip({ label, value }: { label: string; value: string }) {

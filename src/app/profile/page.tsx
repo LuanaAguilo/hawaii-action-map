@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
 import Icon from "@/components/Icon";
 import CountUp from "@/components/CountUp";
+import LanguageToggle from "@/components/LanguageToggle";
 import { AVATARS, ACHIEVEMENTS, PROFILE_STATS } from "@/lib/profile";
 import { LEVELS, getLevel, isAlii } from "@/lib/levels";
 
@@ -44,6 +46,25 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-2xl px-5 pb-10 pt-6">
+      {/* Title + language + search */}
+      <div className="mb-3 flex items-center justify-between animate-rise">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
+          Profile
+        </h1>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <Link
+            href="/search"
+            aria-label="Search"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] transition hover:border-forest/40 hover:text-forest"
+          >
+            <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+
       {/* Membership card */}
       <div className="membership-card card-sheen animate-rise rounded-3xl p-7">
         <div className="flex items-start justify-between">
@@ -51,7 +72,7 @@ export default function ProfilePage() {
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">
               Hawaiʻi Action Map
             </p>
-            <h1 className="mt-2.5 text-3xl font-extrabold tracking-tight text-white">{NAME}</h1>
+            <h2 className="mt-2.5 text-3xl font-extrabold tracking-tight text-white">{NAME}</h2>
             <div className="mt-3 flex items-center gap-2">
               <span className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">
                 {current.name} · Lvl {current.rank}
@@ -215,7 +236,7 @@ export default function ProfilePage() {
               <div key={level.rank} className="flex shrink-0 flex-col items-center" style={{ width: 92 }}>
                 <div className="flex w-full items-center">
                   <div className={`h-0.5 flex-1 ${i === 0 ? "opacity-0" : reached ? "bg-forest/40" : "bg-[var(--border)]"}`} />
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition ${isCurrent ? "animate-soft-pulse bg-forest text-white" : reached ? "bg-forest/15 text-forest" : "bg-[var(--surface-2)] text-[var(--muted-2)]"}`}>
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition ${isCurrent ? "animate-soft-pulse bg-forest text-white" : reached ? "bg-forest/15 text-forest" : "bg-[var(--surface-2)] text-[var(--muted-2)]"}`} >
                     <Icon name={level.icon} className="h-6 w-6" />
                   </div>
                   <div className={`h-0.5 flex-1 ${i === LEVELS.length - 1 ? "opacity-0" : points >= LEVELS[i + 1].minPoints ? "bg-forest/40" : "bg-[var(--border)]"}`} />
